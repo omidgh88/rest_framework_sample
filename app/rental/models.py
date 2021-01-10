@@ -1,21 +1,29 @@
 from django.db import models
+from django.contrib.auth import get_user_model
 
 
-class Friend(models.Model):
+class OwnerModel(models.Model):
+    owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+
+    class Meta:
+        abstract = True
+
+
+class Friend(OwnerModel, models.Model):
     name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
 
 
-class Belonging(models.Model):
+class Belonging(OwnerModel, models.Model):
     name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
 
 
-class Borrowed(models.Model):
+class Borrowed(OwnerModel, models.Model):
     what = models.ForeignKey(Belonging, on_delete=models.CASCADE)
     to_who = models.ForeignKey(Friend, on_delete=models.CASCADE)
     when = models.DateField(auto_now=True)
